@@ -1,11 +1,4 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-exports.seed = async function (knex) {
-  // Deletes ALL existing entries
-  await knex('inventories').del();
-  await knex('inventories').insert([
+module.exports = [
     {
       id: 1,
       warehouse_id: 1,
@@ -702,5 +695,4 @@ exports.seed = async function (knex) {
       status: 'Out of Stock',
       quantity: 0,
     },
-  ]);
-};
+  ]
