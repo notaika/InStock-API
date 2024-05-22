@@ -1,11 +1,24 @@
-const knex = require('knex')(require('.../knexfile'));
+const knex = require("knex")(require("../knexfile"));
 
 async function getWarehouse(req, res) {
-  const { warehouseId } = req.params;
+  const { id } = req.params;
   try {
-    const data = await knex('warehouse').where('id', warehouseId);
+    const data = await knex
+      .select(
+        "id",
+        "warehouse_name",
+        "address",
+        "city",
+        "country",
+        "contact_name",
+        "contact_position",
+        "contact_phone",
+        "contact_email"
+      )
+      .from("warehouses")
+      .where("id", id);
     if (!data.length) {
-      res.sendStatus(4040);
+      res.sendStatus(404);
     } else {
       res.status(200).json(data);
     }
@@ -15,5 +28,5 @@ async function getWarehouse(req, res) {
 }
 
 module.exports = {
-  getWarehouse
+  getWarehouse,
 };
