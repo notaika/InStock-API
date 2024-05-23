@@ -40,7 +40,7 @@ async function deleteWarehouse(req, res) {
   const { id } = req.params;
   try {
     const data = await knex('warehouses').where('id', id).del();
-    if (!data.length) {
+    if (!data) {
       res.sendStatus(404)
     } else {
       res.status(200).json(data)
