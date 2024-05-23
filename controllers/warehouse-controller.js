@@ -1,5 +1,14 @@
 const knex = require("knex")(require("../knexfile"));
 
+async function getWarehouses(req, res) {
+  try {
+    const data = await knex('warehouses')
+    res.status(200).json(data);
+  } catch(err) {
+    res.status(400).send(`Error retrieving warehouses: ${err}`);
+  }
+}
+
 async function getWarehouse(req, res) {
   const { id } = req.params;
   try {
@@ -28,5 +37,6 @@ async function getWarehouse(req, res) {
 }
 
 module.exports = {
+  getWarehouses,
   getWarehouse,
 };
