@@ -9,5 +9,6 @@ router.route('/')
 router.route("/:id")
     .get(warehouseController.getWarehouse)
     .delete(warehouseController.deleteWarehouse)
+    .put(warehouseController.editWarehouse)
 
 module.exports = router;
