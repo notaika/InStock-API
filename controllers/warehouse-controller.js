@@ -16,8 +16,8 @@ async function getWarehouse(req, res) {
         "contact_email"
       )
       .from("warehouses")
-      .where("id", id);
-    if (!data.length) {
+      .where("id", id).first();
+    if (!data) {
       res.sendStatus(404);
     } else {
       res.status(200).json(data);
