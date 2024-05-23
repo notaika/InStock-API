@@ -6,5 +6,6 @@ const fs = require('fs');
 
 router.route("/:id")
     .get(inventoryController.getInventory)
+    .delete(inventoryController.deleteInventory)
 
 module.exports = router;
