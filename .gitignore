@@ -3,4 +3,5 @@ dist
 dist-ssr
 *.local
 .env
+.DS_Store
 data
