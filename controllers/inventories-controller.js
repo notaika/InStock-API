@@ -1,4 +1,5 @@
 const knex = require("knex")(require("../knexfile"));
+const requiredKeys = ['warehouse_id', 'item_name', 'description', 'category', 'status', 'quantity'];
 
 async function getInventories(req, res) {
   try {
