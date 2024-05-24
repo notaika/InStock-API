@@ -1,7 +1,6 @@
 const knex = require("knex")(require("../knexfile"));
 const {phone} = require('phone');
 const emailValidator = require('email-validator');
-const { v4: uuid } = require('uuid');
 const requiredKeys = ['warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email'];
 
 
@@ -123,8 +122,6 @@ async function warehouseInventories(req, res) {
   }
  }
  
-
-
  async function addNewWarehouse(req, res) {
   const body = req.body;
 
@@ -142,7 +139,6 @@ async function warehouseInventories(req, res) {
   }
 
   const newWarehouse = {
-    id: uuid(),
     warehouse_name: body.warehouse_name,
     address: body.address,
     city: body.city,
@@ -155,7 +151,7 @@ async function warehouseInventories(req, res) {
 
   try {
     await knex('warehouses').insert(newWarehouse);
-    const data = await knex('warehouses').where({ id: newWarehouse.id });
+    const data = await knex('warehouses').where({ warehouse_name: newWarehouse.warehouse_name });
     res.status(201).send(data[0]);
   } catch (err) {
     res.status(400).send(`Error creating Warehouse: ${err.message}`);
