@@ -1,5 +1,5 @@
 const knex = require("knex")(require("../knexfile"));
-const phone = require('phone');
+const {phone} = require('phone');
 const emailValidator = require('email-validator');
 const { v4: uuid } = require('uuid');
 const requiredKeys = ['warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email'];
