@@ -68,8 +68,20 @@ const requiredKeys = ['warehouse_id', 'item_name', 'description', 'category', 's
     }
 
     try {
-      const data = await knex('inventories').where('id', id).update(req.body);
-      res.status(200).json(Object.assign(req.params, req.body));
+      const updateRequest = await knex('inventories').where('id', id).update(req.body);
+      const data = await knex
+      .select(
+          "inventories.id",
+          "inventories.warehouse_id",
+          "inventories.item_name",
+          "inventories.description",
+          "inventories.category",
+          "inventories.status",
+          "inventories.quantity"
+      )
+      .from("inventories")
+      .where("inventories.id", id)
+      res.status(200).json(data);
     } catch (err) {
       res.status(500).send(`Error updating Inventory Item: ${err}`)
     }
