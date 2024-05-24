@@ -26,6 +26,21 @@ const knex = require("knex")(require("../knexfile"));
     }
   }
 
+  async function deleteInventory(req, res) {
+    const { id } = req.params;
+    try {
+      const data = await knex('inventories').where('id', id).del();
+      if (!data) {
+        res.sendStatus(404)
+      } else {
+        res.status(200).json(data)
+      }
+    } catch (err) {
+      res.status(400).send(`Error retrieving warehouse: ${err}`)
+    }
+  }
+
   module.exports = {
-    getInventory
+    getInventory,
+    deleteInventory
   };
