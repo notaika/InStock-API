@@ -72,8 +72,22 @@ async function editWarehouse(req, res) {
   }
 
   try {
-    const data = await knex('warehouses').where('id', id).update(req.body);
-    res.status(200).json(Object.assign(req.params, req.body));
+    const updateRequest = await knex('warehouses').where('id', id).update(req.body);
+    const data = await knex
+    .select(
+      "id",
+      "warehouse_name",
+      "address",
+      "city",
+      "country",
+      "contact_name",
+      "contact_position",
+      "contact_phone",
+      "contact_email")
+    .from('warehouses').first()
+    .where('id', id);
+
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).send(`Error updating Warehouse: ${err}`)
   }
