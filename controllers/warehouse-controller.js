@@ -98,9 +98,34 @@ const warehouseExists = async (id) => {
   return !!existingWarehouse.length;
 };
 
+async function warehouseInventories(req, res) {
+  try {
+    const data = await knex("inventories")
+      .select(
+        "id",
+        "warehouse_id",
+        "item_name",
+        "category",
+        "status",
+        "quantity"
+      )
+      .where({ warehouse_id: req.params.id });
+     
+    res.status(200).json(data);
+  } catch (err) {
+    res
+      .status(400)
+      .send(
+        `Error retrieving inventories for Warehouse ${req.params.id}: ${err}`
+      );
+  }
+ }
+ 
+
 module.exports = {
   getWarehouses,
   getWarehouse,
   deleteWarehouse,
-  editWarehouse
+  editWarehouse,
+  warehouseInventories
 };
