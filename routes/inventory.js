@@ -7,5 +7,6 @@ const fs = require('fs');
 router.route("/:id")
     .get(inventoryController.getInventory)
     .delete(inventoryController.deleteInventory)
+    .put(inventoryController.editInventoryItem)
 
 module.exports = router;
