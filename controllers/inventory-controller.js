@@ -80,7 +80,7 @@ const requiredKeys = ['warehouse_id', 'item_name', 'description', 'category', 's
           "inventories.quantity"
       )
       .from("inventories")
-      .where("inventories.id", id)
+      .where("inventories.id", id).first()
       res.status(200).json(data);
     } catch (err) {
       res.status(500).send(`Error updating Inventory Item: ${err}`)
