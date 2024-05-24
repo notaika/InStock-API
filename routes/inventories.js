@@ -9,5 +9,6 @@ router.route('/')
 router.route("/:id")
     .get(inventoriesController.getInventory)
     .delete(inventoriesController.deleteInventory)
+    .put(inventoriesController.editInventoryItem)
 
 module.exports = router;
