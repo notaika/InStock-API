@@ -5,6 +5,8 @@ const fs = require('fs');
 
 router.route('/')
     .get(warehouseController.getWarehouses)
+    .post(warehouseController.addNewWarehouse)
+
 
 router.route("/:id")
     .get(warehouseController.getWarehouse)
