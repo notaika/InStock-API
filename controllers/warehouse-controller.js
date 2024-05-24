@@ -1,8 +1,9 @@
 const knex = require("knex")(require("../knexfile"));
-const { phone } = require('phone');
+const phone = require('phone');
 const emailValidator = require('email-validator');
 const { v4: uuid } = require('uuid');
 const requiredKeys = ['warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_phone', 'contact_email'];
+
 
 async function getWarehouses(req, res) {
   try {
@@ -124,29 +125,22 @@ async function warehouseInventories(req, res) {
  
 
 
-async function addNewWarehouse(req, res) {
+ async function addNewWarehouse(req, res) {
   const body = req.body;
-  const requiredFields = ['warehouse_name', 'address', 'city', 'country', 'contact_name', 'contact_position', 'contact_email', 'contact_phone'];
-  const isValid = requiredFields.every(field => body[field]);
+
+  const isValid = requiredKeys.every(field => body[field]);
   if (!isValid) {
-    return res
-      .status(400)
-      .send("Please make sure to fill in all fields in the request");
+    return res.status(400).send("Please make sure to fill in all fields in the request");
   }
   const validPhone = phone(body.contact_phone);
-  if (!validPhone || validPhone.length === 0) {
-    return res
-      .status(400)
-      .send("Please provide a valid phone number");
+  if (!validPhone.isValid) {
+    return res.status(400).send("Please provide a valid phone number");
   }
- 
   const validEmail = emailValidator.validate(body.contact_email);
   if (!validEmail) {
-    return res
-      .status(400)
-      .send("Please provide a valid email address");
+    return res.status(400).send("Please provide a valid email address");
   }
- 
+
   const newWarehouse = {
     id: uuid(),
     warehouse_name: body.warehouse_name,
@@ -156,17 +150,17 @@ async function addNewWarehouse(req, res) {
     contact_name: body.contact_name,
     contact_position: body.contact_position,
     contact_email: body.contact_email,
-    contact_phone: body.contact_phone
+    contact_phone: validPhone.phoneNumber  
   };
+
   try {
-    await knex("warehouses").insert(newWarehouse);
-    const data = await knex("warehouses").where({ id: newWarehouse.id });
+    await knex('warehouses').insert(newWarehouse);
+    const data = await knex('warehouses').where({ id: newWarehouse.id });
     res.status(201).send(data[0]);
   } catch (err) {
     res.status(400).send(`Error creating Warehouse: ${err.message}`);
   }
- }
- 
+}
 
 module.exports = {
   getWarehouses,
