@@ -127,9 +127,56 @@ const isNumber = (num) => {
   return false;
 }
 
+
+async function addInventoryItem(req, res) {
+  const isValid = requiredKeys.every(field => req.body[field]);
+  if (!isValid) {
+    return res.status(400).send("Please make sure to fill in all required fields");
+  }
+
+  const quantity = parseInt(req.body.quantity);
+  if (!Number.isInteger(quantity) || quantity < 0) {
+    return res.status(400).send("Please insert Quantity Value");
+  }
+
+  try {
+    const warehouse = await knex('warehouses').where({ id: req.body.warehouse_id }).first();
+    if (!warehouse) {
+      return res.status(400).send(`Warehouse does not exist with id ${req.body.warehouse_id}`);
+    }
+    const newInventory = {
+      item_name: req.body.item_name,
+      description: req.body.description,
+      category: req.body.category,
+      status: req.body.status,
+      warehouse_id: req.body.warehouse_id,
+      quantity
+    };
+    
+    const [newItem] = await knex("inventories").insert(newInventory);
+    const data = await knex("inventories")
+      .select(
+        "inventories.id",
+        "inventories.warehouse_id",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .where({ id: newItem })
+      .first();
+    res.status(201).send(data);
+
+  } catch (err) {
+    return res.status(400).send("Error");
+  }
+}
+
 module.exports = {
   getInventories,
   getInventory,
   deleteInventory,
-  editInventoryItem
+  editInventoryItem,
+  addInventoryItem
 };
