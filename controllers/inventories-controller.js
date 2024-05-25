@@ -134,14 +134,12 @@ async function addInventoryItem(req, res) {
     return res.status(400).send("Please make sure to fill in all required fields in the request");
   }
 
-  // Check if quantity is a positive integer
   const quantity = parseInt(req.body.quantity);
   if (!Number.isInteger(quantity) || quantity < 0) {
     return res.status(400).send("Please insert Quantity");
   }
 
   try {
-    // Check if the warehouse exists
     const warehouse = await knex('warehouses').where({ id: req.body.warehouse_id }).first();
     if (!warehouse) {
       return res.status(400).send(`Warehouse does not exist with id ${req.body.warehouse_id}`);
@@ -154,15 +152,15 @@ async function addInventoryItem(req, res) {
       status: req.body.status,
       warehouse_id: req.body.warehouse_id,
       quantity
-      
     };
 
-    // Insert new inventory item into the database
+    // NEW TO DATA
     await knex('inventories').insert(newInventory);
     const data = await knex('inventories').where({ item_name: req.body.item_name, warehouse_id: req.body.warehouse_id });
     return res.status(201).send(data[0]);
   } catch (err) {
     console.error(`Error creating new inventory item: ${err.message}`);
+    return res.status(400).send("Internal Server Error");
   }
 }
 
