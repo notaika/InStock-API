@@ -131,12 +131,12 @@ const isNumber = (num) => {
 async function addInventoryItem(req, res) {
   const isValid = requiredKeys.every(field => req.body[field]);
   if (!isValid) {
-    return res.status(400).send("Please make sure to fill in all required fields in the request");
+    return res.status(400).send("Please make sure to fill in all required fields");
   }
 
   const quantity = parseInt(req.body.quantity);
   if (!Number.isInteger(quantity) || quantity < 0) {
-    return res.status(400).send("Please insert Quantity");
+    return res.status(400).send("Please insert Quantity Value");
   }
 
   try {
@@ -154,18 +154,13 @@ async function addInventoryItem(req, res) {
       quantity
     };
 
-    // NEW TO DATA
     await knex('inventories').insert(newInventory);
     const data = await knex('inventories').where({ item_name: req.body.item_name, warehouse_id: req.body.warehouse_id });
-    return res.status(201).send(data[0]);
+    res.status(201).send(data[0]);
   } catch (err) {
-    console.error(`Error creating new inventory item: ${err.message}`);
-    return res.status(400).send("Internal Server Error");
+    return res.status(400).send("Error");
   }
 }
-
-
-
 
 module.exports = {
   getInventories,
