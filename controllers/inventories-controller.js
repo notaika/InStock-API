@@ -144,7 +144,6 @@ async function addInventoryItem(req, res) {
     if (!warehouse) {
       return res.status(400).send(`Warehouse does not exist with id ${req.body.warehouse_id}`);
     }
-
     const newInventory = {
       item_name: req.body.item_name,
       description: req.body.description,
@@ -153,10 +152,22 @@ async function addInventoryItem(req, res) {
       warehouse_id: req.body.warehouse_id,
       quantity
     };
+    
+    const [newItem] = await knex("inventories").insert(newInventory);
+    const data = await knex("inventories")
+      .select(
+        "inventories.id",
+        "inventories.warehouse_id",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .where({ id: newItem })
+      .first();
+    res.status(201).send(data);
 
-    await knex('inventories').insert(newInventory);
-    const data = await knex('inventories').where({ item_name: req.body.item_name, warehouse_id: req.body.warehouse_id });
-    res.status(201).send(data[0]);
   } catch (err) {
     return res.status(400).send("Error");
   }
